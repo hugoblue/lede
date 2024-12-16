@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - workflow
+# triger action  https://zhuanlan.zhihu.com/p/94402324
 
 permissions:
   contents: read
@@ -51,7 +52,12 @@ jobs:
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: make defconfig
+        run: |
+          make defconfig
+          cat >> .config <<EOF
+          CONFIG_TARGET_KERNEL_PARTSIZE=64
+          CONFIG_TARGET_ROOTFS_PARTSIZE=960
+          EOF
 
       - name: Download packages
         run: make download -j16
